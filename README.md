@@ -8,8 +8,7 @@ connect-dirty is a session store that you can use to interface with the sessions
 It's super simple to use:
 ```javascript
 var dirtySession = require('connect-dirty'),
-express = require('express'),
-connect = require('connect');
+express = require('express');
 
 var app = express()
 .use(express.cookieParser())
