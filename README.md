@@ -1,5 +1,5 @@
 # connect-dirty
-connect-dirty is a session store that you can use to interface with the sessions of an Express or Connect server
+connect-dirty is a Connect/Express session store that uses [node-dirty](https://github.com/felixge/node-dirty)
 
 ## Installation
 `npm install connect-dirty`
