@@ -15,7 +15,7 @@ util.inherits(DirtySession, Store);
 DirtySession.prototype.get = function(sid, fn){
     var self = this;
     process.nextTick(function(){
-        var expires, sess = self.db.get(sid);
+        var expires, sess = (self.db && self.db.get(sid)) ? self.db.get(sid) : null;
         if (sess) {
             expires = ('string' === typeof sess.cookie.expires) ? new Date(sess.cookie.expires) : sess.cookie.expires;
             if (!expires || new Date() < expires) {
