@@ -1,22 +1,64 @@
 var dirtySessions = require('./connect-dirty.js'), express = require('express'),
-connect = require('connect');
+assert = require('assert'), connect = require('connect');
 
-var app = express()
-.use(express.cookieParser())
-.use(express.session({store: new dirtySessions(), secret: 'bro'}));
+var store = new dirtySessions();
+var future = new Date('January 1, 2014 12:00:00');
 
-app.listen(8000);
+describe('connect-dirty sessions', function(){
 
-app.get('/set/:key=:value', function(req, res){
-    req.session[req.params.key] = req.params.value;
-    res.send(req.session);
-});
+    beforeEach(function(done){
+        store.clear(function(){
+            store.set('test', {data: 'test', cookie: {expires: new Date(future)}});
+            store.set('test2', {data: 'test', cookie: {expires: new Date(future)}}, done);
+        });
+    });
 
-app.get('/get/:key', function(req, res){
-    res.send(req.session[req.params.key]);
-});
+    describe('#get()', function(){
+        it('should return the session data given a certain id without error', function(done){
+            store.get('test', done);
+        });
+    });
 
-app.get('/clear', function(req, res){
-    req.session.destroy();
-    res.send(req.session);
+    describe('#all()', function(){
+        it('should return all session data without error', function(done){
+            store.all(done);
+        });
+    });
+
+    describe('#length()', function(){
+        it('should return store session count without error', function(done){
+            store.length(done);
+        });
+    });
+
+    describe('#set()', function(){
+        it('should set values given a session id without error', function(done){
+            store.set('test', {data: 'test2', cookie: {expires: new Date(future)}}, function(){
+                store.get('test', function(err, data){
+                    if (data && data.data === 'test2' && !err){
+                        done();
+                    }
+                    else{
+                        done(new Error('Key not set properly'));
+                    }
+                });
+            });
+        });
+    });
+
+    describe('#destroy()', function(){
+        it('should remove value given a session id without error', function(done){
+            store.destroy('test', function(){
+                var test = store.get('test', function(data){
+                    if (data){
+                        done(new Error('Requested key not destroyed'));
+                    }
+                    else{
+                        done();
+                    }
+                });
+            });
+        });
+    });
+
 });
