@@ -1,7 +1,7 @@
 {
   "name": "connect-dirty",
   "description": "A session store for node-dirty and connect/express.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "connect-dirty.js",
   "dependencies": {
     "dirty": "*",
