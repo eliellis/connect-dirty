@@ -1,5 +1,5 @@
-var dirtySessions = require('./connect-dirty.js'), express = require('express'),
-assert = require('assert'), connect = require('connect');
+var dirtySessions = require('./connect-dirty.js'), fs = require('fs'),
+assert = require('assert');
 
 var store = new dirtySessions();
 var future = new Date('January 1, 2014 12:00:00');
@@ -10,6 +10,17 @@ describe('connect-dirty sessions', function(){
         store.clear(function(){
             store.set('test', {data: 'test', cookie: {expires: new Date(future)}});
             store.set('test2', {data: 'test', cookie: {expires: new Date(future)}}, done);
+        });
+    });
+
+    after(function(done){
+        fs.unlink(store._path, function(err){
+            if (err){
+                done(err);
+            }
+            else{
+                done();
+            }
         });
     });
 
